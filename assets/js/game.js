@@ -70,7 +70,7 @@ $(document).ready(function() {
 function initialCreate (char, id) {
   // var initialImage=$('#initial');
 
-  var html= '<div class="w3-card-4 selectChar" id="'+ characters[char].ID +'" style="width:15%">' +
+  var html= '<div class="w3-card-4 selectChar" id="'+ characters[char].ID +'" style="width:10%">' +
             '<h4 class="w3-center">' + characters[char].name +'</h4>'+
             '<img src="'+ characters[char].imageUrl+ '" id="img_'+ characters[char].ID +'" style="width:100%">'+
             '<div class="w3-container w3-center">'+
@@ -104,6 +104,7 @@ function restartGame() {
 
 initialAdd()
 $('#initial').on('click', '.selectChar', function () {
+  $("#title").hide();
   var selectedPlayer = this.id;
   playerName = this.id
   // hlt = '"score_"+selectedPlayer'
@@ -142,29 +143,45 @@ $('#initial').on('click', '.selectChar', function () {
     // console.log("attack button press")
     // console.log("p-health --> "+playerhealth);
     // console.log("p-name--> "+playerName);
-    // console.log("D-Name --> "+defenderName);
+    console.log("D-Name --> "+defenderName);
     // console.log("D-Health --> "+defenderHealth);
     // console.log("P-AttackBack-->"+characters[playerName].enemyAttackBack);
     // console.log("D-AttackBack-->"+characters[defenderName].enemyAttackBack);
+    if (!defenderName) {
+      alert("Please select a Defender!")
+    }
+    $('#eAv').hide();
+    $('#opponents').hide();
     playerhealth = playerhealth - characters[defenderName].enemyAttackBack;
     defenderHealth = defenderHealth - characters[playerName].attack * attackCounter;
     $("#score_"+playerName).html(playerhealth);
     $("#score_"+defenderName).html(defenderHealth);
     if(playerhealth < 0){
-      alert("You Lost the Game...Game will be restarted automatically")
-      restartGame();
+      alert("You Lost the Game... \nClick Restart Game Button to play again")
+      $('#restartbtn').show();
+      $('#attackButton').hide();
+      // restartGame();
     }
     if (defenderHealth < 0) {
       $('#defender').empty();
       $("#uDef").hide();
+      $('#eAv').show();
+    $('#opponents').show();
       enemyCounter--;
       alert("Congragulations "+playerName+ " Defeated " +defenderName)
+      defenderName = "";
       if(enemyCounter == 0){
-        alert("You Won ! Game will be restarted automatically")
-        restartGame();
+        alert("You Won ! \nClick Restart Game Button to play again");
+        $('#restartbtn').show();
+        $('#attackButton').hide();
+        // restartGame();
       }
     }
     attackCounter++;
+  });
+
+  $('#restartbtn').on('click.restartbtn', function () {
+    restartGame();
   });
 
 
